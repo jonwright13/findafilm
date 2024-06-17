@@ -1,6 +1,6 @@
 # Movie Suggester
 
-A React concept app using TheMovieDB API. You can try it [here](https://movie-suggester-jonwright13s-projects.vercel.app/)
+A React concept app using TheMovieDB API. You can try it [here](https://findafilm.vercel.app/)
 <br>It is built with TypeScript and Styled-Components
 
 ## Features

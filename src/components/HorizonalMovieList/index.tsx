@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import HorizontalScroll from "../HorizontalScroll";
 import MoviePoster from "../MoviePoster";
-import { Column, Title, Content, List, LoadingContainer } from "./style";
+import {
+  Column,
+  Title,
+  Content,
+  List,
+  LoadingContainer,
+  NoTitleTest,
+} from "./style";
 import { HorizontalMovieListProps } from "../../types/props";
 import fetchDetails from "../../api/fetchById";
 import { useApp } from "../../hooks/useAppContext";
@@ -24,28 +31,31 @@ const HorizonalMovieList = <T extends number>({
     const end = Math.min(page * 6, movies.length);
     const movieList: T[] = [...movies].reverse();
 
-    const result = await Promise.all(
-      movieList.map(async (item, index) => {
-        const id = item;
-        let data: any;
-        if (item !== null) {
-          if (index >= start && index <= end) {
-            data = await fetchDetails(token, id);
-          } else {
-            data = { id: item, poster_path: "" };
-          }
-          return (
-            <MoviePoster
-              key={index}
-              movie={data}
-              header={header}
-              setTitle={setTitle}
-              onClick={onClick}
-            />
-          );
-        }
-      })
-    );
+    const result =
+      movieList.length > 0
+        ? await Promise.all(
+            movieList.map(async (item, index) => {
+              const id = item;
+              let data: any;
+              if (item !== null) {
+                if (index >= start && index <= end) {
+                  data = await fetchDetails(token, id);
+                } else {
+                  data = { id: item, poster_path: "" };
+                }
+                return (
+                  <MoviePoster
+                    key={index}
+                    movie={data}
+                    header={header}
+                    setTitle={setTitle}
+                    onClick={onClick}
+                  />
+                );
+              }
+            })
+          )
+        : [<NoTitleTest key={1}>Add some titles to this list</NoTitleTest>];
     setLoading(() => {
       setTitles(result);
       return false;

@@ -21,6 +21,7 @@ const fetchDiscover = async (
       with_original_language:
         selection.language === "all" ? "" : selection.language,
     };
+
     const query: AxiosRequestConfig = {
       method: "GET",
       url: `${BASE_URL}${endpoints[selection.type]}`,
