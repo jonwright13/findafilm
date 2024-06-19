@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { ChangeEvent } from "react";
-import { Type } from "../interface/types";
+import { Type } from "../interface/general.types";
 
 export const Button = styled.button`
   border: none;

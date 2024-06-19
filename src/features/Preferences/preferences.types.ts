@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
-import { Name, Pref } from "./general.types";
-import { Title } from "./api.types";
+import { Name, Pref } from "../../interface/general.types";
+import { Title } from "../../interface/api.types";
 
 export interface MoviePosterProps {
   movie: Title;
