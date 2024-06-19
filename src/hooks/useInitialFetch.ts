@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import fetchInitialData from "../api/fetchInitialData";
-import { Token } from "../types/types";
-import { DropdownsProps } from "../types/props";
+import fetchInitialData from "../api/initial";
+import { DropdownsProps as InitialDropdowns } from "../interface/general.types";
 
-const useInitialFetch = (token: Token | null) => {
-  const [dropdowns, setDropdowns] = useState<DropdownsProps>({
+const useInitialFetch = () => {
+  const [dropdowns, setDropdowns] = useState<InitialDropdowns>({
     type: ["movie", "tv"],
     genresAll: [],
     genresMovie: [],
@@ -13,16 +12,14 @@ const useInitialFetch = (token: Token | null) => {
   });
 
   const handleSetDropdown = async () => {
-    if (token !== null && token !== undefined) {
-      const data: DropdownsProps = await fetchInitialData(token);
-      setDropdowns((prev) => ({ ...prev, ...data }));
-    }
+    const data: InitialDropdowns = await fetchInitialData();
+    setDropdowns((prev) => ({ ...prev, ...data }));
   };
 
   useEffect(() => {
     handleSetDropdown();
     // eslint-disable-next-line
-  }, [token]);
+  }, []);
 
   return { dropdowns, setDropdowns };
 };

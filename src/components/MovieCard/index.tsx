@@ -1,9 +1,8 @@
 import { FC } from "react";
 import StarRating from "../StarRating";
-import { usePrefs } from "../../hooks/usePrefs";
 import { Icon } from "../Icons";
-import { Movie, Tv, Name } from "../../types/types";
-import { MovieCardProps } from "../../types/props";
+import { Name } from "../../interface/general.types";
+import { MovieCardProps } from "../../interface/components.types";
 import {
   Card,
   Container,
@@ -13,39 +12,29 @@ import {
   ButtonsContainer,
   Poster,
 } from "./style";
-import { getBackdropUrl } from "../../utils/getBackdropUrl";
+import {
+  parsePrefs,
+  parseHeading,
+  parseReleased,
+  parsePosterUrl,
+} from "./_utils/utils";
 
 const MovieCard: FC<MovieCardProps> = ({
   title,
-  selection,
   handleGet = false,
+  addRating,
+  storedValue,
 }) => {
-  const { storedValue, handleAddRating } = usePrefs();
-
   if (title !== null) {
     const handleRating = (name: Name) => {
-      handleAddRating(name, title);
+      addRating(name, title);
       if (handleGet) handleGet();
     };
 
-    const prefs = {
-      watched: title ? storedValue.watched.includes(title.id) : false,
-      watchlist: title ? storedValue.watchlist.includes(title.id) : false,
-      ignore: title ? storedValue.ignore.includes(title.id) : false,
-    };
-
-    const heading: string | undefined =
-      selection.type === "movie" ? (title as Movie).title : (title as Tv).name;
-
-    const released: string | undefined =
-      selection.type === "movie"
-        ? (title as Movie).release_date
-        : (title as Tv).first_air_date;
-
-    const posterUrl =
-      title !== undefined && title !== null
-        ? getBackdropUrl(title?.poster_path)
-        : "";
+    const prefs = parsePrefs(title, storedValue);
+    const heading = parseHeading(title);
+    const released = parseReleased(title);
+    const posterUrl = parsePosterUrl(title);
 
     return (
       <Card>

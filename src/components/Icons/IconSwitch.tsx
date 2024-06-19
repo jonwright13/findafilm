@@ -4,7 +4,7 @@ import {
   MdAddCircleOutline,
   MdBlock,
 } from "react-icons/md";
-import { IconSwitchProps } from "../../types/props";
+import { IconSwitchProps } from "../../interface/components.types";
 
 const IconSwitch: FC<IconSwitchProps> = ({ type }) => {
   switch (type) {

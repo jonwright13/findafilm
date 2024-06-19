@@ -1,5 +1,6 @@
 import { useLocalStorage } from "./useLocalStorage";
-import { Preferences, Name, Title } from "../types/types";
+import { Preferences, Name, Pref, Type } from "../interface/general.types";
+import { Title } from "../interface/api.types";
 
 const defaultValue: Preferences = {
   watchlist: [],
@@ -7,17 +8,31 @@ const defaultValue: Preferences = {
   ignore: [],
 };
 
-function getKeyOfVariable(
+const getKeyOfVariable = (
   obj: any[],
   variable: string | number
-): string | boolean {
+): string | boolean => {
   for (const [key, array] of Object.entries(obj)) {
-    if (Array.isArray(array) && array.includes(variable)) {
-      return key;
+    if (Array.isArray(array)) {
+      for (const item of array) {
+        if (item.id === variable) return key;
+      }
     }
   }
   return false; // Return null if the variable is not found in any array
-}
+};
+
+const getType = (item: Title): Type => {
+  if (item !== null && item !== undefined) {
+    if ("title" in item) {
+      return "movie";
+    } else {
+      return "tv";
+    }
+  } else {
+    return "all";
+  }
+};
 
 export const usePrefs = () => {
   const [storedValue, setStoredValue] = useLocalStorage(
@@ -25,49 +40,48 @@ export const usePrefs = () => {
     defaultValue
   );
 
-  const addItem = (updatedValue: Preferences, name: Name, itemId: number) => {
-    updatedValue[name] = [...updatedValue[name], itemId];
-    return updatedValue;
+  const addItem = (updatedPrefs: Preferences, name: Name, item: Title) => {
+    const newItem: Pref = { id: item.id, type: getType(item) };
+    updatedPrefs[name] = [...updatedPrefs[name], newItem];
+    return updatedPrefs;
   };
 
   const removeItem = (
-    updatedValue: Preferences,
+    updatedPrefs: Preferences,
     name: Name,
     itemId: number
   ) => {
-    updatedValue[name] = updatedValue[name].filter(
-      (id: number) => id !== itemId
+    updatedPrefs[name] = updatedPrefs[name].filter(
+      (item: Pref) => item.id !== itemId
     );
-    return updatedValue;
+    return updatedPrefs;
   };
 
-  const removeFromAll = (updatedValue: Preferences, itemId: number) => {
-    const keys = Object.keys(updatedValue) as Name[];
-    keys.forEach((key) => removeItem(updatedValue, key, itemId));
-    return updatedValue;
+  const removeFromAll = (updatedPrefs: Preferences, itemId: number) => {
+    const keys = Object.keys(updatedPrefs) as Name[];
+    keys.forEach((key) => removeItem(updatedPrefs, key, itemId));
+    return updatedPrefs;
   };
 
   const handleAddRating = (name: Name, item: Title): void => {
-    if (item !== null && item !== undefined && item.id !== undefined) {
-      let updatedValue = { ...storedValue };
+    let updatedPrefs = { ...storedValue };
 
-      // Check if the item id already exists within any of the value arrays
-      const isExistsKey = getKeyOfVariable(updatedValue, item.id);
+    // Check if the item id already exists within any of the value arrays
+    const isExistsKey = getKeyOfVariable(updatedPrefs, item.id);
 
-      if (isExistsKey === name) {
-        // If key is the same as name, just remove the item
-        updatedValue = removeItem(updatedValue, name, item.id);
-      } else {
-        if (isExistsKey) {
-          // If the item exists in another key, remove all first
-          updatedValue = removeFromAll(updatedValue, item.id);
-        }
-
-        //   Add the item to the key
-        updatedValue = addItem(updatedValue, name, item.id);
+    if (isExistsKey === name) {
+      // If key is the same as name, just remove the item
+      updatedPrefs = removeItem(updatedPrefs, name, item.id);
+    } else {
+      if (isExistsKey) {
+        // If the item exists in another key, remove all first
+        updatedPrefs = removeFromAll(updatedPrefs, item.id);
       }
-      setStoredValue(updatedValue);
+
+      //   Add the item to the key
+      updatedPrefs = addItem(updatedPrefs, name, item);
     }
+    setStoredValue(updatedPrefs);
   };
 
   return { storedValue, handleAddRating };

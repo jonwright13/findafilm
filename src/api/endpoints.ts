@@ -1,11 +1,13 @@
-interface Endpoints {
-  all: string;
-  movie: string;
-  tv: string;
-}
+import { Endpoints } from "../interface/api.types";
 
 export const endpoints: Endpoints = {
-  all: "/discover/movie",
-  movie: "/discover/movie",
-  tv: "/discover/tv",
+  DISCOVER_MOVIE: "/discover/movie",
+  DISCOVER_TV: "/discover/tv",
+  MOVIE_GENRES: "/genre/movie/list",
+  TV_GENRES: "/genre/tv/list",
+  MOVIE_CERTIFICATIONS: "/certification/movie/list",
+  TV_CERTIFICATIONS: "/certification/tv/list",
+  LANGUAGES: "/configuration/languages",
+  MOVIE: "/movie",
+  TV: "/tv",
 };

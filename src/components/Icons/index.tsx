@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { IconContainer } from "./style";
-import { IconProps } from "../../types/props";
+import { IconProps } from "../../interface/components.types";
 import IconSwitch from "./IconSwitch";
 
 export const Icon: FC<IconProps> = ({

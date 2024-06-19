@@ -2,7 +2,7 @@ import { FC, useMemo } from "react";
 import { IconContext } from "react-icons/lib";
 import { IoStar, IoStarHalf, IoStarOutline } from "react-icons/io5";
 import { StarRow } from "./style";
-import { StarRatingProps } from "../../types/props";
+import { StarRatingProps } from "../../interface/components.types";
 
 const StarRating: FC<StarRatingProps> = ({ value, maxValue = 10 }) => {
   let starValue: number = value === null || value === undefined ? 0 : value;
